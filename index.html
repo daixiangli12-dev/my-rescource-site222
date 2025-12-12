@@ -1,50 +1,60 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>网盘资源搜索</title>
-<!-- 引入外部CSS文件 -->
-<link rel="stylesheet" href="styles.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YALI</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <!-- 页面标题 -->
+    <div class="logo">YALI</div>
 
-<h1>🔍 网盘资源搜索</h1>
-<div class="search-box">
-  <input type="text" id="keyword" placeholder="输入资源名称..." autocomplete="off" />
-  <button onclick="search()">搜索</button>
-</div>
-  <!-- ========== 资源分类入口 ========= -->
-<div class="categories" style="max-width: 800px; margin: 0 auto 25px; text-align: center;">
-  <h2 style="color: #333; margin-bottom: 12px; font-size: 20px;">📂 资源分类浏览</h2>
-  <p style="margin: 0;">
-    <a href="https://www.kdocs.cn/l/crOyXHBVm96c">📖 获取教程</a>
-    <a href="https://share.mubu.com/doc/EBEMhUZL2z">📖 日更清单</a>
-    <a href="https://www.kdocs.cn/wo/sl/v1jDRid">📖 连载漫</a>
-    <a href="https://www.kdocs.cn/wo/sl/v117pXxr">📖 完结漫</a>
-    <a href="https://www.kdocs.cn/wo/sl/v14Bf1xz">📖 小说</a>
-    <a href="https://web.wps.cn/wo/sl/v39HLe4?app_id=KeiwhRvKjT82N9D0HUUL6">📖 许愿池</a>
-    <a href="https://www.kdocs.cn/wo/sl/v11RMuNK">📖 许愿池实时大屏</a>
-  </p>
-</div>
-<div id="results" class="results"></div>
+    <!-- 搜索框 -->
+    <div class="search-container">
+        <input type="text" id="searchInput" placeholder="输入资源名称...">
+        <button id="searchBtn" class="search-btn">
+            <span class="icon">🔍</span> <!-- 使用 Unicode 字符作为图标 -->
+        </button>
+    </div>
 
-<!-- Access Code Modal -->
-<div id="auth-modal">
-  <div class="modal-content">
-    <h3>🔐 获取今日访问权限</h3>
-    <p>请前往指定位置获取今日访问码：</p>
-    <a id="access-link" href="http://u3v.cn/5VLXQV" target="_blank" class="quark-link">👉 点击获取今日访问码</a>
-    <br/><br/>
-    <label for="access-code">请输入获取到的 4 位访问码:</label>
-    <input type="text" id="access-code" maxlength="4" placeholder="例如: ab12" autocomplete="off">
-    <button id="verify-btn">验证访问码</button>
-    <div id="auth-error" class="error"></div>
-  </div>
-</div>
+    <!-- 资源分类浏览 -->
+    <div class="category-container">
+        <!-- 获取教程 -->
+        <a href="https://your-tutorial-link.com" target="_blank" class="category-item">
+            <span class="icon">📚</span> 获取教程
+        </a>
 
-<!-- 引入外部JavaScript文件 -->
-<script src="script.js"></script>
+        <!-- 资源分类 -->
+        <div class="category-group">
+            <a href="https://your-resource-list-link.com" target="_blank" class="category-item">
+                <span class="icon">📅</span> 日更清单
+            </a>
+            <a href="https://your-resource-list-link.com" target="_blank" class="category-item">
+                <span class="icon">📖</span> 连载漫
+            </a>
+            <a href="https://your-resource-list-link.com" target="_blank" class="category-item">
+                <span class="icon">📘</span> 完结漫
+            </a>
+            <a href="https://your-resource-list-link.com" target="_blank" class="category-item">
+                <span class="icon">📕</span> 小说
+            </a>
+        </div>
 
+        <!-- 反馈与查看 -->
+        <div class="category-group">
+            <a href="https://your-wish-pool-link.com" target="_blank" class="category-item">
+                <span class="icon">💬</span> 许愿池
+            </a>
+            <a href="https://your-wish-pool-dashboard-link.com" target="_blank" class="category-item">
+                <span class="icon">📊</span> 许愿池实时大屏
+            </a>
+        </div>
+    </div>
+
+    <!-- 数据加载状态 -->
+    <div class="status-message">
+        <span class="status-icon">✅</span> 数据加载成功，请开始搜索。
+    </div>
 </body>
 </html>
