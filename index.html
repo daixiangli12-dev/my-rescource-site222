@@ -166,8 +166,8 @@
     <a href="https://www.kdocs.cn/wo/sl/v1jDRid">📖 连载漫</a>
     <a href="https://www.kdocs.cn/wo/sl/v117pXxr">📖 完结漫</a>
     <a href="https://www.kdocs.cn/wo/sl/v14Bf1xz">📖 小说</a>
-    <a href="https://web.wps.cn/wo/sl/v39HLe4?app_id=KeiwhRvKjT82N9D0HUUL6">📖 许愿池</a> 
-    <a href="https://www.kdocs.cn/wo/sl/v11RMuNK">📖 许愿池实时大屏</a> 
+    <a href="https://web.wps.cn/wo/sl/v39HLe4?app_id=KeiwhRvKjT82N9D0HUUL6">📖 许愿池</a>
+    <a href="https://www.kdocs.cn/wo/sl/v11RMuNK">📖 许愿池实时大屏</a>
   </p>
 </div>
 <div id="results" class="results"></div>
@@ -180,7 +180,7 @@
     <a id="access-link" href="http://u3v.cn/5VLXQV" target="_blank" class="quark-link">👉 点击获取今日访问码</a>
     <br/><br/>
     <label for="access-code">请输入获取到的 4 位访问码:</label>
-    <input type="text" id="access-code" maxlength="4" placeholder="例如: ab12">
+    <input type="text" id="access-code" maxlength="4" placeholder="例如: ab12" autocomplete="off">
     <button id="verify-btn">验证访问码</button>
     <div id="auth-error" class="error"></div>
   </div>
@@ -190,10 +190,27 @@
   // --- 🔐 SHARED SECRET KEY for Data Decryption ---
   const SHARED_SECRET_KEY = "MY_STRONG_XOR_KEY_2024!SecureItWell";
 
-  // --- 🔐 FRONTEND SECRET_SALT for Daily Access Code Generation ---
-  const SECRET_SALT_FOR_ACCESS_CODE = "YourUniqueFrontendSaltForDailyCode2024!KeepItSafe";
+  // --- 🔐 Hardcoded Access Codes Map (Date -> Code) ---
+  // 注意：这里的日期格式必须是 YYYY-MM-DD
+  // 请定期更新此列表，添加未来的日期和对应的访问码
+  const ACCESS_CODES = {
+    "2025-12-12": "a1b2", // 示例：今天的访问码
+    "2024-05-21": "c3d4",
+    "2024-05-22": "e5f6",
+    "2024-05-23": "g7h8",
+    "2024-05-24": "i9j0",
+    // --- 添加更多日期和访问码 ---
+    "2024-06-10": "k1l2",
+    "2024-06-11": "m3n4",
+    "2024-06-15": "o5p6",
+    // ... 继续添加直到未来30天 ...
+    // 示例：假设今天是 2024-05-21
+    // 你需要添加从 2024-05-21 到 2024-06-19 的所有日期及对应码
+    // 这里只是示意，请替换为你实际规划的码
+    "2024-06-19": "q7r8"
+  };
 
-  let EXPECTED_ACCESS_CODE = null;
+
   let decryptedDataCache = null;
 
   function getBeijingDate() {
@@ -205,13 +222,6 @@
     return `${year}-${month}-${day}`;
   }
 
-  async function generateAccessCode(dateStr, salt) {
-    const encoder = new TextEncoder();
-    const data = encoder.encode(dateStr + salt);
-    const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-    const hashArray = Array.from(new Uint8Array(hashBuffer));
-    return hashArray.slice(0, 2).map(b => b.toString(16).padStart(2, '0')).join('').toLowerCase();
-  }
 
   function xorDecrypt(data, key) {
     const keyBytes = new TextEncoder().encode(key);
@@ -243,6 +253,14 @@
     return result;
   }
 
+  // 新增函数：检查本地存储的授权是否仍然有效（即日期是否匹配）
+  function isAuthorizationStillValid() {
+      const today = getBeijingDate();
+      const storedAuthDate = localStorage.getItem('yali_auth_date');
+      // 如果存储的日期与今天相同，则认为授权有效
+      return storedAuthDate === today;
+  }
+
   async function initializeApp() {
     const authErrorEl = document.getElementById('auth-error');
     const verifyButton = document.getElementById('verify-btn');
@@ -251,13 +269,25 @@
 
     try {
       const today = getBeijingDate();
-      EXPECTED_ACCESS_CODE = await generateAccessCode(today, SECRET_SALT_FOR_ACCESS_CODE);
+      const EXPECTED_ACCESS_CODE = ACCESS_CODES[today]; // 从硬编码对象中获取
+
+      // 如果今天没有配置访问码，应禁止访问或提示错误
+      if (!EXPECTED_ACCESS_CODE) {
+           console.error(`[Error] No access code configured for today: ${today}`);
+           authErrorEl.textContent = `系统错误：未配置 ${today} 的访问码。`;
+           verifyButton.disabled = true;
+           modal.style.display = 'flex'; // 确保模态框显示
+           return; // 阻止后续逻辑
+      }
+
       console.log(`[Info] Today (${today}) Expected Access Code:`, EXPECTED_ACCESS_CODE);
 
       verifyButton.addEventListener('click', async () => {
         const userCode = accessCodeInput.value.trim().toLowerCase();
         if (userCode === EXPECTED_ACCESS_CODE) {
+          // 授权成功时，同时存储授权标志和授权日期
           localStorage.setItem('yali_authorized', 'true');
+          localStorage.setItem('yali_auth_date', today);
           modal.style.display = 'none';
           authErrorEl.textContent = '';
           await preloadDecryptedData();
@@ -268,11 +298,16 @@
         }
       });
 
-      if (localStorage.getItem('yali_authorized') === 'true') {
+      // 检查 localStorage 中是否有授权标志 *并且* 日期是今天
+      if (localStorage.getItem('yali_authorized') === 'true' && isAuthorizationStillValid()) {
         modal.style.display = 'none';
         await preloadDecryptedData();
       } else {
+        // 如果未授权，或授权已过期（日期不对），则显示模态框
         modal.style.display = 'flex';
+        // 可选：清除过期的授权状态
+        localStorage.removeItem('yali_authorized');
+        localStorage.removeItem('yali_auth_date');
       }
 
     } catch (error) {
@@ -329,6 +364,8 @@
     resultsEl.innerHTML = `<p style="color:red;">数据加载失败：${err.message}</p>`;
   }
 }
+
+
   async function search() {
     const keyword = document.getElementById('keyword').value.trim();
     const resultsEl = document.getElementById('results');
@@ -338,8 +375,11 @@
       return;
     }
 
-    if (localStorage.getItem('yali_authorized') !== 'true' || !EXPECTED_ACCESS_CODE) {
+    // 搜索前也检查授权有效性
+    if (localStorage.getItem('yali_authorized') !== 'true' || !isAuthorizationStillValid()) {
       alert('请先通过访问码验证！');
+      // 可选：自动弹出模态框
+      document.getElementById('auth-modal').style.display = 'flex';
       return;
     }
 
@@ -360,7 +400,7 @@
       resultsEl.innerHTML = '';
 
       if (filteredResults.length === 0) {
-resultsEl.innerHTML = `
+        resultsEl.innerHTML = `
           <p>未找到相关资源</p>
           <p style="font-size: 14px; color: #666; margin-top: 10px;">
             🔄 <strong>提示</strong>: 结果可能已更新，请尝试 <strong><a href="#" onclick="location.reload(); return false;" style="color: #007bff;">刷新页面</a></strong> 后重试。<br>
