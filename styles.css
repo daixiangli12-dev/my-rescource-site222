@@ -7,7 +7,7 @@
 
 body {
     font-family: 'Arial', sans-serif;
-    background-color: #f7e9ff; /* 粉色渐变背景 */
+    background-color: #e0d5ff; /* 紫色系背景 */
     color: #333;
     padding: 20px;
 }
@@ -17,7 +17,7 @@ body {
     text-align: center;
     font-size: 2.5rem;
     font-weight: bold;
-    color: #e91e63; /* 粉红色 */
+    color: #9c27b0; /* 深紫色 */
     margin-bottom: 20px;
 }
 
@@ -43,40 +43,41 @@ body {
 }
 
 #searchInput:focus {
-    border-color: #e91e63;
+    border-color: #9c27b0;
 }
 
 /* 搜索按钮 */
-.search-btn {
-    background-color: #e91e63;
+#searchBtn {
+    background-color: #9c27b0;
     color: white;
     border: none;
     padding: 12px 20px;
     border-radius: 0 20px 20px 0;
     cursor: pointer;
     font-size: 1rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
     transition: background-color 0.3s;
 }
 
-.search-btn:hover {
-    background-color: #c2185b;
+#searchBtn:hover {
+    background-color: #7b1fa2;
 }
 
-.icon {
-    margin-right: 8px;
-    font-size: 1.2rem;
+/* 获取教程链接 */
+.tutorial-link {
+    text-align: center;
+    margin-bottom: 20px;
 }
 
 /* 分类浏览容器 */
 .category-container {
     display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
+    flex-direction: column;
     gap: 15px;
     margin-bottom: 20px;
+    width: 100%;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 /* 分类项 */
@@ -91,6 +92,7 @@ body {
     font-size: 0.9rem;
     transition: all 0.3s;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    border: 1px solid #ddd;
 }
 
 .category-item:hover {
@@ -99,10 +101,11 @@ body {
 }
 
 /* 分类组 */
-.category-group {
+.category-row {
     display: flex;
     gap: 15px;
     flex-wrap: wrap;
+    justify-content: center;
 }
 
 /* 状态消息 */
