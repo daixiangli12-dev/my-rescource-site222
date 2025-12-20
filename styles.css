@@ -18,16 +18,19 @@ body {
   position: relative;
 }
 
-/* 添加半透明黑色遮罩层，提升文字可读性 */
-body::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.4); /* 调整透明度以适应图片 */
-  z-index: 1;
+/* 只保留背景图，不再加遮罩 */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-image: url('https://raw.githubusercontent.com/daixiangli12-dev/yali-search/main/background.jpg');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  background-color: #f0f0f0; /* 备用浅色背景，避免图片加载失败时变黑 */
+  color: #1a1a1a; /* 改为深色文字 */
+  min-height: 100vh;
+  position: relative;
 }
 
 /* 主内容区域，所有内容放在这里，确保在遮罩层之上 */
@@ -44,38 +47,36 @@ body::before {
 h1 {
   font-size: 3rem;
   margin-bottom: 20px;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-  color: #ffffff;
+  text-shadow: none; /* ✅ 移除阴影 */
+  color: #1a1a1a;
+  font-weight: bold;
+}
+#results p {
+  color: #1a1a1a;
+  font-size: 14px;
+  margin-top: 10px;
 }
 
 /* ==================== 搜索框样式 ==================== */
-.search-box {
-  display: flex;
-  justify-content: center;
-  margin: 30px 0;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-
 .search-box input {
   width: 400px;
   padding: 14px 20px;
-  border: none;
+  border: 1px solid #ccc; /* ✅ 实线边框 */
   border-radius: 30px;
   font-size: 16px;
   outline: none;
-  background-color: rgba(255, 255, 255, 0.2); /* 半透明白色 */
-  color: white;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  background-color: white; /* ✅ 白色背景 */
+  color: #1a1a1a; /* ✅ 深色文字 */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;
 }
 
 .search-box input::placeholder {
-  color: rgba(255, 255, 255, 0.7);
+  color: #999;
 }
 
 .search-box button {
-  background-color: #0ea5e9; /* 天蓝色，科技感 */
+  background-color: #0ea5e9;
   color: white;
   border: none;
   padding: 14px 28px;
@@ -91,7 +92,6 @@ h1 {
   background-color: #0284c7;
   transform: scale(1.05);
 }
-
 /* ==================== 分类按钮区域样式 ==================== */
 .categories,
 #dynamic-category-buttons-container /* JS 生成的动态容器 */ {
@@ -113,24 +113,24 @@ h1 {
 .card-link,
 .dynamic-category-btn {
   display: inline-block;
-  background-color: rgba(255, 255, 255, 0.15);
-  color: white;
+  background-color: white; /* ✅ 白色背景 */
+  color: #1a1a1a; /* ✅ 深色文字 */
   padding: 10px 20px;
   border-radius: 20px;
   text-decoration: none;
   font-size: 14px;
+  font-weight: 600; /* ✅ 加粗 */
   margin: 0 8px 10px 8px;
   transition: all 0.3s ease;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  font-weight: 500;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e0e0e0; /* ✅ 边框 */
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .card-link:hover,
 .dynamic-category-btn:hover {
-  background-color: rgba(255, 255, 255, 0.25);
+  background-color: #f5f5f5; /* ✅ 悬停变浅灰 */
   transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
 /* 动态分类按钮的激活状态 */
@@ -150,22 +150,26 @@ h1 {
 }
 
 .item {
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px); /* 毛玻璃效果 */
+  background: white; /* ✅ 纯白背景 */
+  border: 1px solid #e0e0e0; /* ✅ 细边框 */
   margin-bottom: 20px;
   padding: 20px;
   border-radius: 10px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* ✅ 轻微阴影 */
+  transition: transform 0.2s ease;
+}
+
+.item:hover {
+  transform: translateY(-2px);
 }
 
 .item strong {
   display: block;
   margin-bottom: 12px;
   font-size: 18px;
-  color: #e2e8f0;
+  color: #1a1a1a; /* ✅ 深色文字 */
+  font-weight: bold;
 }
-
 .link {
   display: inline-block;
   margin-right: 15px;
@@ -273,6 +277,7 @@ h1 {
   margin-top: 10px;
   min-height: 1.2em;
 }
+
 
 
 
