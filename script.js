@@ -5,7 +5,7 @@ const SHARED_SECRET_KEY = "MY_STRONG_XOR_KEY_2024!SecureItWell";
 // 注意：这里的日期格式必须是 YYYY-MM-DD
 // 请定期更新此列表，添加未来的日期和对应的访问码
 const ACCESS_CODES = {
-  "2025-12-12": "a1b2", // 示例：今天的访问码
+  "2025-12-20": "a1b2", // 示例：今天的访问码
   "2024-05-21": "c3d4",
   "2024-05-22": "e5f6",
   "2024-05-23": "g7h8",
@@ -280,4 +280,5 @@ if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', initializeApp);
 } else {
   initializeApp();
+
 }
